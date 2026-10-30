@@ -1,0 +1,13 @@
+{
+  "name": "cadastro-equipamentos",
+  "version": "1.0.0",
+  "description": "Sistema de cadastro de equipamentos eletrônicos para manutenção",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongodb": "^6.8.0"
+  }
+}

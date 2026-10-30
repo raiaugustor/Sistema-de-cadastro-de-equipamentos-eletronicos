@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Equipamentos</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 30px; }
+    .container { max-width: 480px; margin: auto; background: #fff; padding: 28px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+    h1 { color: #1f3a5f; margin-top: 0; font-size: 1.5rem; }
+    label { display: block; margin-top: 14px; font-weight: bold; color: #333; }
+    input, select { width: 100%; padding: 10px; margin-top: 6px; border: 1px solid #bbb; border-radius: 6px; font-size: 1rem; }
+    input:focus, select:focus { outline: none; border-color: #1f3a5f; }
+    button { width: 100%; margin-top: 22px; padding: 12px; background: #1f3a5f; color: #fff; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+    button:hover { background: #16294a; }
+    .mensagem { display: none; padding: 12px; border-radius: 6px; margin-bottom: 10px; font-weight: bold; }
+    .mensagem.ok { display: block; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .mensagem.erro { display: block; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .link { text-align: center; margin-top: 18px; }
+    .link a { color: #1f3a5f; font-weight: bold; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Cadastro de Equipamentos Eletrônicos</h1>
+
+    <!-- Mensagem de retorno ao usuário -->
+    <div id="mensagem" class="mensagem"></div>
+
+    <!-- Formulário com método POST -->
+    <form action="/cadastrar" method="POST">
+      <label for="nome">Nome do equipamento</label>
+      <input type="text" id="nome" name="nome" placeholder="Ex.: Notebook Inspiron 15" required>
+
+      <label for="fabricante">Fabricante</label>
+      <input type="text" id="fabricante" name="fabricante" placeholder="Ex.: Dell" required>
+
+      <label for="categoria">Categoria</label>
+      <select id="categoria" name="categoria" required>
+        <option value="">Selecione...</option>
+        <option value="Computador">Computador</option>
+        <option value="Notebook">Notebook</option>
+        <option value="Celular">Celular</option>
+        <option value="Tablet">Tablet</option>
+        <option value="Televisão">Televisão</option>
+        <option value="Áudio e Vídeo">Áudio e Vídeo</option>
+        <option value="Console">Console</option>
+        <option value="Outros">Outros</option>
+      </select>
+
+      <label for="preco">Preço (R$)</label>
+      <input type="number" id="preco" name="preco" step="0.01" min="0.01" placeholder="Ex.: 1500.00" required>
+
+      <button type="submit">CADASTRAR</button>
+    </form>
+
+    <div class="link">
+      <a href="/equipamentos">Ver equipamentos cadastrados</a>
+    </div>
+  </div>
+
+  <script>
+    // Exibe a mensagem de retorno enviada pelo servidor (via URL)
+    const params = new URLSearchParams(window.location.search);
+    const msg = params.get('msg');
+    const tipo = params.get('tipo');
+
+    if (msg) {
+      const div = document.getElementById('mensagem');
+      div.textContent = msg;
+      div.className = 'mensagem ' + (tipo === 'ok' ? 'ok' : 'erro');
+      window.history.replaceState({}, '', '/');
+    }
+  </script>
+</body>
+</html>

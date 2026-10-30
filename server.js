@@ -6,14 +6,14 @@ const app = express();
 const PORT = 3000;
 
 // Conexão com o MongoDB
-const uri = 'mongodb://127.0.0.1:27017';
+const uri = 'mongodb+srv://rairibeiro:SUASENHA@cluster0.xg1tqmy.mongodb.net/';
 const client = new MongoClient(uri);
-let colecao; // coleção "equipamentos" do banco "manutencao"
+let colecao; 
 
-// Lê os dados enviados pelo formulário (application/x-www-form-urlencoded)
+
 app.use(express.urlencoded({ extended: true }));
 
-// Evita que texto digitado quebre o HTML da página de listagem
+
 function escaparHtml(texto) {
   return String(texto)
     .replace(/&/g, '&amp;')
@@ -23,24 +23,23 @@ function escaparHtml(texto) {
     .replace(/'/g, '&#39;');
 }
 
-// Redireciona para o formulário com uma mensagem de retorno
+
 function voltarComMensagem(res, tipo, texto) {
   const params = new URLSearchParams({ tipo, msg: texto });
   res.redirect('/?' + params.toString());
 }
 
-// ROTA GET: apresenta a página de cadastro
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ROTA POST: processa o envio do formulário
+
 app.post('/cadastrar', async (req, res) => {
   const nome = (req.body.nome || '').trim();
   const fabricante = (req.body.fabricante || '').trim();
   const categoria = (req.body.categoria || '').trim();
 
-  // Converte o preço para número (aceita vírgula ou ponto)
+
   const preco = Number(String(req.body.preco || '').trim().replace(',', '.'));
 
   // VALIDAÇÃO: campos vazios
@@ -48,12 +47,12 @@ app.post('/cadastrar', async (req, res) => {
     return voltarComMensagem(res, 'erro', 'Preencha todos os campos.');
   }
 
-  // VALIDAÇÃO: preço numérico e maior que zero
+  
   if (Number.isNaN(preco) || preco <= 0) {
     return voltarComMensagem(res, 'erro', 'O preço deve ser um número maior que zero.');
   }
 
-  // PERSISTÊNCIA: insertOne()
+
   try {
     const resultado = await colecao.insertOne({ nome, fabricante, categoria, preco });
 
@@ -67,7 +66,7 @@ app.post('/cadastrar', async (req, res) => {
   }
 });
 
-// ROTA GET /equipamentos: consulta com find() e exibe os registros
+
 app.get('/equipamentos', async (req, res) => {
   try {
     const lista = await colecao.find().toArray();
@@ -118,7 +117,6 @@ app.get('/equipamentos', async (req, res) => {
   }
 });
 
-// Conecta ao MongoDB e só então inicia o servidor
 async function iniciar() {
   try {
     await client.connect();
@@ -133,5 +131,6 @@ async function iniciar() {
     process.exit(1);
   }
 }
+
 
 iniciar();
